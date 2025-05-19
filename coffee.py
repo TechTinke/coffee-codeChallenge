@@ -2,11 +2,15 @@ from order import Order
 
 class Coffee:
     def __init__(self, name):
-        if isinstance(name, str) and len(name) >= 3:
-            self._name = name
-        else:
-            raise ValueError("Coffee name must be at least 3 characters")
-    
+        self._validate_name(name)
+        self._name = name
+
+    def _validate_name(self, name):
+        if not isinstance(name, str):
+            raise ValueError("Name must be a string.")
+        if len(name) < 3:
+            raise ValueError("Coffee name must be at least 3 characters.")
+
     @property
     def name(self):
         return self._name
@@ -21,5 +25,7 @@ class Coffee:
         return len(self.orders())
 
     def average_price(self):
-        prices = [order.price for order in self.orders()]
-        return sum(prices)/len(prices) if prices else 0
+        all_orders = self.orders()
+        if not all_orders:
+            return 0
+        return sum(order.price for order in all_orders) / len(all_orders)
